@@ -1,0 +1,55 @@
+---
+apiVersion: concourse.k8s.io/v1beta1
+kind: Pipeline
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: build
+spec:
+  pipelineString: |
+    resource_types:
+    - name: harbor
+      type: docker-image
+      privileged: true
+      source:
+        repository: govsvc/gsp-harbor-docker-image-resource
+
+    resources:
+    - name: licensify-repo
+      type: git
+      source:
+        uri: git@github.com:alphagov/licensify.git
+        branch: master
+        private_key: |
+          ((ci-github-key.private_key))
+
+    - name: mongo-image
+      type: harbor
+      source:
+        repository: registry.{{ .Values.cluster.domain }}/licensify/mongo
+        username: ((harbor.harbor_username))
+        password: ((harbor.harbor_password))
+        harbor:
+          url: https://registry.{{ .Values.cluster.domain }}
+          prevent_vul: "false"
+        notary:
+          url: https://notary.{{ .Values.cluster.domain }}
+          root_key: ((harbor.root_key))
+          delegate_key: ((harbor.ci_key))
+          passphrase:
+            root: ((harbor.notary_root_passphrase))
+            snapshot: ((harbor.notary_snapshot_passphrase))
+            targets: ((harbor.notary_targets_passphrase))
+            delegation: ((harbor.notary_delegation_passphrase))
+
+    jobs:
+    - name: build-mongo
+      plan:
+      - get: licensify-repo
+        trigger: true
+      - put: mongo-image
+        params:
+          build: licensify-repo
+          build_args:
+            component: proxy-node-gateway
+          dockerfile: docker/mongo.Dockerfile
