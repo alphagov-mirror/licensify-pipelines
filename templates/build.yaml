@@ -52,4 +52,4 @@ spec:
           build: licensify-repo
           build_args:
             component: proxy-node-gateway
-          dockerfile: docker/mongo.Dockerfile
+          dockerfile: licensify-repo/docker/mongo.Dockerfile
