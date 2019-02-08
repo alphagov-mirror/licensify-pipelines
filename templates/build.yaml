@@ -41,18 +41,21 @@ spec:
 
     - name: mongo-image
       type: harbor
-      source: *harbor_source
+      source:
         repository: registry.{{ .Values.cluster.domain }}/licensify/mongo
+        <<: *harbor_source
 
     - name: clamav-image
       type: harbor
-      source: *harbor_source
+      source:
         repository: registry.{{ .Values.cluster.domain }}/licensify/clamav
+        <<: *harbor_source
 
     - name: allapps-image
       type: harbor
-      source: *harbor_source
+      source:
         repository: registry.{{ .Values.cluster.domain }}/licensify/allapps
+        <<: *harbor_source
 
     jobs:
     - name: build-mongo
