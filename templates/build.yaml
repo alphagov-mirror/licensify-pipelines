@@ -49,5 +49,5 @@ spec:
         trigger: true
       - put: mongo-image
         params:
-          build: docker
+          build: licensify-repo/docker
           dockerfile: mongo.Dockerfile
