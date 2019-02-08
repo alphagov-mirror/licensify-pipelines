@@ -61,6 +61,24 @@ spec:
             targets: ((harbor.notary_targets_passphrase))
             delegation: ((harbor.notary_delegation_passphrase))
 
+    - name: allapps-image
+      type: harbor
+      source:
+        repository: registry.{{ .Values.cluster.domain }}/licensify/allapps
+        username: ((harbor.harbor_username))
+        password: ((harbor.harbor_password))
+        harbor:
+          url: https://registry.{{ .Values.cluster.domain }}
+          prevent_vul: "false"
+        notary:
+          url: https://notary.{{ .Values.cluster.domain }}
+          root_key: ((harbor.root_key))
+          delegate_key: ((harbor.ci_key))
+          passphrase:
+            root: ((harbor.notary_root_passphrase))
+            snapshot: ((harbor.notary_snapshot_passphrase))
+            targets: ((harbor.notary_targets_passphrase))
+            delegation: ((harbor.notary_delegation_passphrase))
     jobs:
     - name: build-mongo
       plan:
@@ -78,3 +96,11 @@ spec:
         params:
           build: licensify-repo
           dockerfile: licensify-repo/docker/clamav.Dockerfile
+    - name: build-allapps
+      plan:
+      - get: licensify-repo
+        trigger: true
+      - put: allapps-image
+        params:
+          build: licensify-repo
+          dockerfile: licensify-repo/docker/build_env.Dockerfile
