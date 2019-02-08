@@ -49,7 +49,5 @@ spec:
         trigger: true
       - put: mongo-image
         params:
-          build: licensify-repo
-          build_args:
-            component: proxy-node-gateway
-          dockerfile: licensify-repo/docker/mongo.Dockerfile
+          build: docker
+          dockerfile: mongo.Dockerfile
