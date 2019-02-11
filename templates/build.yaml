@@ -87,3 +87,29 @@ spec:
             APP_NAME: frontend
             APP_PORT: 9903
             APP_DEBUG_PORT: 10903
+    - name: build-backend
+      plan:
+      - get: licensify-repo
+        trigger: true
+      - put: backend-image
+        params:
+          build: licensify-repo
+          dockerfile: licensify-repo/docker/licensify.Dockerfile
+          build_args:
+            BUILD_NUMBER: 1.1.1
+            APP_NAME: backend
+            APP_PORT: 9920
+            APP_DEBUG_PORT: 10920
+    - name: build-feed
+      plan:
+      - get: licensify-repo
+        trigger: true
+      - put: feed-image
+        params:
+          build: licensify-repo
+          dockerfile: licensify-repo/docker/licensify.Dockerfile
+          build_args:
+            BUILD_NUMBER: 1.1.1
+            APP_NAME: feed
+            APP_PORT: 9940
+            APP_DEBUG_PORT: 10940
