@@ -83,7 +83,7 @@ spec:
           build: licensify-repo
           dockerfile: licensify-repo/docker/licensify.Dockerfile
           build_args:
-            BUILD_NUMBER=1.1.1
-            APP_NAME=frontend
-            APP_PORT=9903
-            APP_DEBUG_PORT=10903
+            BUILD_NUMBER: 1.1.1
+            APP_NAME: frontend
+            APP_PORT: 9903
+            APP_DEBUG_PORT: 10903
