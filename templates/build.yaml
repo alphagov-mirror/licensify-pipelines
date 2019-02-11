@@ -35,7 +35,7 @@ spec:
       type: git
       source:
         uri: git@github.com:alphagov/licensify.git
-        branch: master
+        branch: re-docker
         private_key: |
           ((ci-github-key.private_key))
 
@@ -51,10 +51,10 @@ spec:
         repository: registry.{{ .Values.cluster.domain }}/licensify/clamav
         <<: *harbor_source
 
-    - name: allapps-image
+    - name: frontend-image
       type: harbor
       source:
-        repository: registry.{{ .Values.cluster.domain }}/licensify/allapps
+        repository: registry.{{ .Values.cluster.domain }}/licensify/frontend
         <<: *harbor_source
 
     jobs:
@@ -74,11 +74,11 @@ spec:
         params:
           build: licensify-repo
           dockerfile: licensify-repo/docker/clamav.Dockerfile
-    - name: build-allapps
+    - name: frontend
       plan:
       - get: licensify-repo
         trigger: true
-      - put: allapps-image
+      - put: frontend-image
         params:
           build: licensify-repo
-          dockerfile: licensify-repo/docker/build_env.Dockerfile
+          dockerfile: licensify-repo/docker/licensify.Dockerfile
