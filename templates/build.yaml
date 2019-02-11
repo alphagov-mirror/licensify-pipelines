@@ -13,6 +13,7 @@ spec:
       harbor:
         url: https://registry.{{ .Values.cluster.domain }}
         prevent_vul: "false"
+        public: "false"
       notary:
         url: https://notary.{{ .Values.cluster.domain }}
         root_key: ((harbor.root_key))
