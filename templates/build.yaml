@@ -57,6 +57,18 @@ spec:
         repository: registry.{{ .Values.cluster.domain }}/licensify/frontend
         <<: *harbor_source
 
+    - name: backend-image
+      type: harbor
+      source:
+        repository: registry.{{ .Values.cluster.domain }}/licensify/backend
+        <<: *harbor_source
+
+    - name: feed-image
+      type: harbor
+      source:
+        repository: registry.{{ .Values.cluster.domain }}/licensify/feed
+        <<: *harbor_source
+
     jobs:
     - name: build-mongo
       plan:
