@@ -76,6 +76,12 @@ spec:
         repository: registry.{{ .Values.cluster.domain }}/licensify/dummy-services
         <<: *harbor_source
 
+    - name: integration-tests-image
+      type: harbor
+      source:
+        repository: registry.{{ .Values.cluster.domain }}/licensify/integration-tests
+        <<: *harbor_source
+
     jobs:
     - name: build-mongo
       plan:
@@ -145,3 +151,11 @@ spec:
             APP_NAME: dummy-services
             APP_PORT: 9910
             APP_DEBUG_PORT: 10910
+    - name: build-integration-tests
+      plan:
+      - get: licensify-repo
+        trigger: true
+      - put: integration-tests-image
+        params:
+          build: licensify-repo
+          dockerfile: licensify-repo/docker/build_env.Dockerfile
