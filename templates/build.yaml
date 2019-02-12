@@ -70,6 +70,12 @@ spec:
         repository: registry.{{ .Values.cluster.domain }}/licensify/feed
         <<: *harbor_source
 
+    - name: dummy-services-image
+      type: harbor
+      source:
+        repository: registry.{{ .Values.cluster.domain }}/licensify/dummy-services
+        <<: *harbor_source
+
     jobs:
     - name: build-mongo
       plan:
@@ -126,3 +132,16 @@ spec:
             APP_NAME: feed
             APP_PORT: 9940
             APP_DEBUG_PORT: 10940
+    - name: build-dummy-services
+      plan:
+      - get: licensify-repo
+        trigger: true
+      - put: dummy-services-image
+        params:
+          build: licensify-repo
+          dockerfile: licensify-repo/docker/licensify.Dockerfile
+          build_args:
+            BUILD_NUMBER: 1.1.1
+            APP_NAME: dummy-services
+            APP_PORT: 9910
+            APP_DEBUG_PORT: 10910
